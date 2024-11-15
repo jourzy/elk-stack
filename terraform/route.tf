@@ -10,7 +10,7 @@ resource "aws_route_table" "public" {
  }
  
  tags = {
-   Name = "Public route table"
+   Name = "Public subnet route table"
  }
 }
 
@@ -21,8 +21,9 @@ resource "aws_route_table_association" "public" {
   route_table_id = aws_route_table.public.id
 }
 
-# route table for private subnets
-resource "aws_route_table" "private" {
+# route table for backend subnets
+# Routes all traffic through the nat gateway
+resource "aws_route_table" "backend" {
   count  = length(aws_nat_gateway.nat)
   vpc_id = aws_vpc.main.id
 
@@ -32,14 +33,14 @@ resource "aws_route_table" "private" {
   }
 
   tags = {
-    Name = "Private route table"
+    Name = "Backend route table"
   }
 }
 
 
-# Associate private route table with private subnets
-resource "aws_route_table_association" "private" {
-  count          = length(aws_subnet.private)
-  subnet_id      = element(aws_subnet.private[*].id, count.index)
-  route_table_id = element(aws_route_table.private[*].id, count.index)
+# Associate backend route table with backend subnets
+resource "aws_route_table_association" "backend" {
+  count          = length(aws_subnet.backend)
+  subnet_id      = element(aws_subnet.backend[*].id, count.index)
+  route_table_id = element(aws_route_table.backend[*].id, count.index)
 }
