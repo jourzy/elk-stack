@@ -1,32 +1,29 @@
 resource "aws_subnet" "public" {
-  count             = length(var.cidr_blocks_subnet_public)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = element(var.cidr_blocks_subnet_public, count.index)
-  availability_zone = element(var.availability_zones, count.index)
+  cidr_block        = "10.0.1.0/24"
+  availability_zone = "eu-west-2a"
 
     tags = {
-    Name = "Public subnet ${count.index + 1}"
+    Name = "Public subnet elk-stack"
   }
 }
 
 resource "aws_subnet" "application" {
-  count             = length(var.cidr_blocks_subnet_application)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = element(var.cidr_blocks_subnet_application, count.index)
-  availability_zone = element(var.availability_zones, count.index)
+  cidr_block        = "10.0.2.0/24"
+  availability_zone = "eu-west-2a"
 
     tags = {
-    Name = "Application subnet ${count.index + 1}"
+    Name = "Application subnet elk-stack"
   }
 }
 
 resource "aws_subnet" "backend" {
-  count             = length(var.cidr_blocks_subnet_backend)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = element(var.cidr_blocks_subnet_backend, count.index)
-  availability_zone = element(var.availability_zones, count.index)
+  cidr_block        = "10.0.3.0/24"
+  availability_zone = "eu-west-2a"
 
     tags = {
-    Name = "Backend subnet ${count.index + 1}"
+    Name = "Backend subnet elk-stack"
   }
 }
