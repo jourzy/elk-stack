@@ -34,7 +34,7 @@ resource "aws_security_group" "kibana" {
   }
 
       tags = {
-    Name = "Security group for Kibana instance"
+    Name = "security-group-Kibana"
   }
 }
 
@@ -63,7 +63,7 @@ resource "aws_security_group" "application" {
   }
 
       tags = {
-    Name = "Security group for Application instance"
+    Name = "security-group-application"
   }
 }
 
@@ -107,7 +107,7 @@ resource "aws_security_group" "logstash" {
   }
 
       tags = {
-    Name = "Security group for Logstash instance"
+    Name = "security-group-Logstash"
   }
 }
 
@@ -152,6 +152,6 @@ resource "aws_security_group" "elasticsearch" {
   }
 
     tags = {
-    Name = "Security group for Elasticsearch instance"
+    Name = "security-group-elasticsearch"
   }
 }
