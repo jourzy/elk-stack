@@ -2,22 +2,28 @@ resource "aws_internet_gateway" "main" {
 vpc_id = aws_vpc.main.id
 
  tags = {
-   Name = "elk-stack"
+   Name = "elk-internet-gateway"
  }
 }
 
-
-// NAT Gateways must be placed in public subnets to allow private instances to access the internet for updates, 
-// while still not being directly accessible from the internet.
-resource "aws_nat_gateway" "nat" {
-  count         = length(aws_subnet.public)
-
-  allocation_id = aws_eip.nat[count.index].id   # Use a unique EIP for each NAT gateway
-  subnet_id     = element(aws_subnet.public[*].id, count.index)  # Place the NAT gateway in the public subnets
-}
-
-// Allocate an Elastic IP (EIP) - one for each NAT gateway
+# Allocate an Elastic IP (EIP) for NAT gateway
 resource "aws_eip" "nat" {
-  count  = length(aws_subnet.public)
   domain = "vpc"
+  tags = {
+    Name = "elk-nat-eip"
+  }
 }
+
+
+# NAT Gateway to go in public subnet 
+resource "aws_nat_gateway" "main" {
+  allocation_id = aws_eip.nat.id  
+  subnet_id     = aws_subnet.public.id  # Place the NAT gateway in the public subnet
+  tags = {
+    Name = "elk-nat-gateway"
+  }
+
+  # Good practice to depend on the Internet Gateway
+  depends_on = [aws_internet_gateway.main]
+}
+
